@@ -13,16 +13,16 @@ public class WebController {
 	ApplicationContext context = new ClassPathXmlApplicationContext("bean.xml");
 	UserLoggableService loggableService = context.getBean(UserLoggableService.class);
 	UserService service = context.getBean(UserService.class);
-        
-    @RequestMapping("/aspectnormal")
-    public String normalAspect(){
-    	String result = "";
-    	
-    	result += service.getUserById(1).getFirstName() + "<br/>";
-    	result += service.setUserFirstName("John", 1) + "<br/>";
-    	result += service.setUserLastName("Lennon", 2);
-		
+
+	@RequestMapping("/aspectnormal")
+	public String normalAspect() {
+		String result = "";
+
+		result += service.getUserById("1").getFirstName() + "<br/>";
+		result += service.setUserFirstName("John", "1") + "<br/>";
+		result += service.setUserLastName("Lennon", "2");
+
 		return result;
-    }
+	}
 
 }

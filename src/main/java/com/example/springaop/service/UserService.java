@@ -7,37 +7,37 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import com.example.springaop.model.Users;
+import com.example.springaop.model.User;
 
 @Component
 public class UserService {
 
-	private static Map<Long, Users> store = new HashMap<Long, Users>();
+	private static Map<String, User> store = new HashMap<String, User>();
 	static {
-		store.put(1L, new Users(1, "Jack", "Smith"));
-		store.put(2L, new Users(2, "Adam", "Johnson"));
+		store.put("1", new User("1", "Jack", "Smith"));
+		store.put("2", new User("2", "Adam", "Johnson"));
 	}
 
-	public Users getUserById(long id) {
+	public User getUserById(String id) {
 		return store.get(id);
 	}
 
-	public Users setUserFirstName(String firstName, long id) {
-		Users cust = store.get(id);
+	public User setUserFirstName(String firstName, String id) {
+		User cust = store.get(id);
 		cust.setFirstName(firstName);
 		return cust;
 	}
 
-	public Users setUserLastName(String lastName, long id) {
-		Users cust = store.get(id);
+	public User setUserLastName(String lastName, String id) {
+		User cust = store.get(id);
 		cust.setLastName(lastName);
 		return cust;
 	}
 
-	public List<Users> findUserByLastName(String lastName) {
-		List<Users> listCust = new ArrayList<>();
+	public List<User> findUserByLastName(String lastName) {
+		List<User> listCust = new ArrayList<>();
 
-		for (Long id : store.keySet()) {
+		for (String id : store.keySet()) {
 			if (store.get(id).getLastName().equals(lastName)) {
 				listCust.add(store.get(id));
 			}
@@ -46,10 +46,10 @@ public class UserService {
 		return listCust;
 	}
 
-	public List<Users> findAllUsers() {
-		List<Users> listCust = new ArrayList<>();
+	public List<User> findAllUsers() {
+		List<User> listCust = new ArrayList<>();
 
-		for (Long id : store.keySet()) {
+		for (String id : store.keySet()) {
 			listCust.add(store.get(id));
 		}
 

@@ -1,11 +1,7 @@
 Manifest-Version: 1.0
-Built-By: AdrianPopovici
-Build-Jdk: 13.0.1
+Build-Jdk-Spec: 13
 Implementation-Title: SpringAOP-AspectJ
 Implementation-Version: 0.0.1-SNAPSHOT
-Implementation-Vendor-Id: com.javasampleapproach.springaop-aspectj
-Implementation-Vendor: Pivotal Software, Inc.
-Implementation-URL: http://projects.spring.io/spring-boot/spring-aop-asp
- ectj/
+Main-Class: com.example.springaop.SpringAopApplication
 Created-By: Maven Integration for Eclipse
 
