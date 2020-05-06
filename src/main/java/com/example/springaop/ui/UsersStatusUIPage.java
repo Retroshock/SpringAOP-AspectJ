@@ -6,7 +6,7 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
-@Route("status")
+//@Route("status")
 public class UsersStatusUIPage extends VerticalLayout{
 
 	private UsersListUI usersList;

@@ -8,7 +8,7 @@ import javax.persistence.Id;
 @Entity
 public class UserDB {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.TABLE)
 	private Integer id;
 	private String firstName;
 	private String lastName;

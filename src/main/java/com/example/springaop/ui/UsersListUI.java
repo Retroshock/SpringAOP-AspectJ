@@ -1,8 +1,13 @@
 package com.example.springaop.ui;
 
+import java.util.ArrayList;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.example.springaop.controller.MainController;
 import com.example.springaop.model.User;
+import com.example.springaop.model.UserDB;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
@@ -11,19 +16,14 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 
-import java.util.ArrayList;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-@SpringComponent
-@UIScope
+@Route("status")
 public class UsersListUI extends HorizontalLayout{
 	
 	private TextField txtid, txtfirstname, txtlastname, txtphone,txtemail;
@@ -31,6 +31,9 @@ public class UsersListUI extends HorizontalLayout{
 	private ListBox<User> listBox = new ListBox<>();
 
 	private ArrayList<User> users = new ArrayList<User>();
+	
+	@Autowired
+	public MainController mainController;
 
 	@Autowired
 	public UsersListUI(){
@@ -176,9 +179,11 @@ public class UsersListUI extends HorizontalLayout{
 			users.add(new User(id, firstName, lastName, phone, email));
 
 			listBox.setItems(users);
+			mainController.addNewUser(new UserDB(firstName, lastName, email, phone));
 		}else{
 			Notification.show("Cannot save. Same name exists. Try different name.");
 		}
+		
 		clearFormData();
 	}
 

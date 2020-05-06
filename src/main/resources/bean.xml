@@ -17,7 +17,7 @@
 		class="com.example.springaop.aspect.UserAspect" />
 		
 	<bean name="test"
-		class="com.example.springaop.ui.UsersStatusUIPage" />
+		class="com.example.springaop.ui.UsersListUI" />
 
 </beans>
 
