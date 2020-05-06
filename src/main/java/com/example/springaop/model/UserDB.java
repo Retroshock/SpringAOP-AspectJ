@@ -1,36 +1,35 @@
 package com.example.springaop.model;
 
-public class User {
-	private String id;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
+public class UserDB {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer id;
 	private String firstName;
 	private String lastName;
-	private String phone;
 	private String email;
+	private String phone;
 
-	public User() {
+	public UserDB() {
 	}
 
-	public User(String id, String firstName, String lastName) {
-		this.id = id;
-		this.firstName = firstName;
-		this.lastName = lastName;
-	}
-
-	public User(String id, String firstName, String lastName, String phone, String email) {
-		this.id = id;
+	public UserDB(String firstName, String lastName, String email, String phone) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.phone = phone;
 		this.email = email;
 	}
 
-	public Boolean isArchived = false;
-
-	public String getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
