@@ -21,9 +21,9 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 
 @Route("info")
-public class UsersInfoUI extends HorizontalLayout{
+public class UsersInfoUI extends HorizontalLayout {
 
-	private TextField txtid, txtfirstname, txtlastname, txtphone,txtemail;
+	private TextField txtid, txtfirstname, txtlastname, txtphone, txtemail;
 	private Button btnUpdate;
 	private ListBox<UserDB> listBox = new ListBox<>();
 
@@ -33,7 +33,7 @@ public class UsersInfoUI extends HorizontalLayout{
 	public MainController mainController;
 
 	@Autowired
-	public UsersInfoUI(){
+	public UsersInfoUI() {
 		setupUsersList();
 
 		add(listBox, createForm());
@@ -43,7 +43,7 @@ public class UsersInfoUI extends HorizontalLayout{
 		listBox.addAttachListener(listener -> {
 			listBox.setDataProvider(dataProvider);
 		});
-		
+
 		listBox.setItems(users);
 		listBox.setRenderer(new ComponentRenderer<>(user -> {
 
@@ -52,15 +52,11 @@ public class UsersInfoUI extends HorizontalLayout{
 			Label phone = new Label("Phone: " + user.getPhone());
 			Label email = new Label("Email: " + user.getEmail());
 
-
 			Div labels = new Div(id, name, phone, email);
 
 			Div layout = new Div(labels);
-			labels.getStyle().set("display", "flex")
-			.set("flexDirection", "column")
-			.set("marginRight", "10px");
-			layout.getStyle().set("display", "flex")
-			.set("alignItems", "center");
+			labels.getStyle().set("display", "flex").set("flexDirection", "column").set("marginRight", "10px");
+			layout.getStyle().set("display", "flex").set("alignItems", "center");
 			return layout;
 		}));
 
@@ -75,7 +71,7 @@ public class UsersInfoUI extends HorizontalLayout{
 		});
 	}
 
-	private FormLayout createForm(){
+	private FormLayout createForm() {
 		FormLayout f = new FormLayout();
 
 		txtid = new TextField("ID");
@@ -85,13 +81,12 @@ public class UsersInfoUI extends HorizontalLayout{
 		txtemail = new TextField("Email");
 
 		txtid.setEnabled(false);
-	
-		btnUpdate = new Button("Update user",
-				VaadinIcon.ARROW_CIRCLE_UP.create());
-		btnUpdate.addClickListener(event->updateUser());
+
+		btnUpdate = new Button("Update user", VaadinIcon.ARROW_CIRCLE_UP.create());
+		btnUpdate.addClickListener(event -> updateUser());
 		btnUpdate.setVisible(false);
 
-		f.add(txtid, txtfirstname,txtlastname,txtemail,txtphone, btnUpdate);
+		f.add(txtid, txtfirstname, txtlastname, txtemail, txtphone, btnUpdate);
 		return f;
 	}
 
@@ -101,24 +96,23 @@ public class UsersInfoUI extends HorizontalLayout{
 		String email = txtemail.getValue().trim();
 		String phone = txtphone.getValue().trim();
 
-		if (firstName.isEmpty() || lastName.isEmpty()
-				|| email.isEmpty() || phone.isEmpty()) {
+		if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || phone.isEmpty()) {
 			Notification.show("Input data cannot be empty");
 			return;
 		}
 
 		UserDB userFound = null;
-		
-		for(UserDB user : users) {
-			if(user.getEmail().equals(email)) {
+
+		for (UserDB user : users) {
+			if (user.getEmail().equals(email)) {
 				userFound = user;
 				break;
 			}
 		}
 
 		btnUpdate.setVisible(false);
-		
-		if(userFound != null) {
+
+		if (userFound != null) {
 			clearFormData();
 			mainController.addNewUser(userFound);
 			dataProvider.refreshItem(userFound);
@@ -128,21 +122,20 @@ public class UsersInfoUI extends HorizontalLayout{
 		}
 	}
 
-	private void save(){
+	private void save() {
 		String firstName = txtfirstname.getValue().trim();
 		String lastName = txtlastname.getValue().trim();
 		String email = txtemail.getValue().trim();
 		String phone = txtphone.getValue().trim();
 
-		if (firstName.isEmpty() || lastName.isEmpty()
-				|| email.isEmpty() || phone.isEmpty()) {
+		if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || phone.isEmpty()) {
 			Notification.show("Input data cannot be empty");
 			return;
 		}
 
 		Boolean userFound = false;
-		for(UserDB user : users) {
-			if(user.getEmail().equals(email)) {
+		for (UserDB user : users) {
+			if (user.getEmail().equals(email)) {
 				userFound = true;
 			}
 		}
@@ -151,12 +144,12 @@ public class UsersInfoUI extends HorizontalLayout{
 			clearFormData();
 			mainController.addNewUser(new UserDB(firstName, lastName, email, phone));
 			dataProvider.refreshAll();
-		}else{
+		} else {
 			Notification.show("Cannot save. Same email exists. Try different email.");
 		}
 	}
 
-	public void clearFormData(){
+	public void clearFormData() {
 		txtid.setValue("");
 		txtfirstname.setValue("");
 		txtlastname.setValue("");
@@ -164,33 +157,32 @@ public class UsersInfoUI extends HorizontalLayout{
 		txtemail.setValue("");
 	}
 
-	public void populateForm(UserDB user){
+	public void populateForm(UserDB user) {
 		txtid.setValue(user.getId().toString());
 		txtfirstname.setValue(user.getFirstName());
 		txtlastname.setValue(user.getLastName());
 		txtemail.setValue(user.getEmail());
 		txtphone.setValue(user.getPhone());
 	}
-	
-	private DataProvider<UserDB, Void> dataProvider =
-			DataProvider.fromCallbacks(
-					// First callback fetches items based on a query
-					query -> {
-						// The index of the first item to load
-						int offset = query.getOffset();
 
-						// The number of items to load
-						int limit = query.getLimit();
-						
-						users.clear();
-						mainController.getAllUsers().forEach(user -> {
-							users.add(new UserDB(user.getId(), user.getFirstName(), user.getLastName(), user.getPhone(), user.getEmail()));
-						});            		
+	private DataProvider<UserDB, Void> dataProvider = DataProvider.fromCallbacks(
+			// First callback fetches items based on a query
+			query -> {
+				// The index of the first item to load
+				int offset = query.getOffset();
 
-						return users.stream();
-					}, 
-					// Second callback fetches the number of items
-					// for a query
-					query -> 30
-					);
+				// The number of items to load
+				int limit = query.getLimit();
+
+				users.clear();
+				mainController.getAllUsers().forEach(user -> {
+					users.add(new UserDB(user.getId(), user.getFirstName(), user.getLastName(), user.getPhone(),
+							user.getEmail()));
+				});
+
+				return users.stream();
+			},
+			// Second callback fetches the number of items
+			// for a query
+			query -> 30);
 }

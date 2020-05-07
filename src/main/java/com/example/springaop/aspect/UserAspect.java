@@ -8,7 +8,7 @@ import org.aspectj.lang.annotation.Before;
 public class UserAspect {
 	
 	@Before("execution(* com.example.springaop.service.UserService.getCustomerById(..))")
-	public void getCustomerByIdAdvice() {
+	public void get() {
 		System.out.println("Execute advice on getCustomerByIdAdvice()");
 	}
 
