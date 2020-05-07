@@ -17,19 +17,20 @@ import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
+
+import antlr.collections.List;
 
 
-@Route("status")
+@Route("statusica")
 public class UsersListUI extends HorizontalLayout{
 	
 	private TextField txtid, txtfirstname, txtlastname, txtphone,txtemail;
 	private Button btnAddNew, btnUpdate;
 	private ListBox<User> listBox = new ListBox<>();
-
+ 
 	private ArrayList<User> users = new ArrayList<User>();
 	
 	@Autowired
@@ -44,13 +45,31 @@ public class UsersListUI extends HorizontalLayout{
 	
 	private void setupUsersList() {
 		users.clear();
-		users.add(new User("1", "Jack", "Smith", "0123456789", "mail@email.com"));
-		users.add(new User("2", "Jack", "Smith", "0123456789", "mail@email.com"));
-		users.add(new User("3", "Jack", "Smith", "0123456789", "mail@email.com"));
-		users.add(new User("4", "Jack", "Smith", "0123456789", "mail@email.com"));
-		users.add(new User("5", "Jack", "Smith", "0123456789", "mail@email.com"));
-		users.add(new User("6", "Jack", "Smith", "0123456789", "mail@email.com"));
+		
+		DataProvider<User, Void> dataProvider =
+	    DataProvider.fromCallbacks(
+	        // First callback fetches items based on a query
+	        query -> {
+	            // The index of the first item to load
+	            int offset = query.getOffset();
 
+	            // The number of items to load
+	            int limit = query.getLimit();
+	            
+	            ArrayList<User> usersTemp = new ArrayList<User>();
+				mainController.getAllUsers().forEach(user -> {
+					usersTemp.add(new User(user.getId().toString(), user.getFirstName(), user.getLastName(), user.getPhone(), user.getEmail()));
+				});            		
+
+	            return usersTemp.stream();
+	        }, 
+	        // Second callback fetches the number of items
+	        // for a query
+	        query -> 30
+        );
+		
+		listBox.setDataProvider(dataProvider);
+		
 		listBox.setItems(users);
 		listBox.setRenderer(new ComponentRenderer<>(user -> {
 
@@ -116,13 +135,13 @@ public class UsersListUI extends HorizontalLayout{
 	}
 
 	private void updateUser() {
-		String id = txtid.getValue().trim();
+		Integer id = Integer.parseInt(txtid.getValue().trim());
 		String firstName = txtfirstname.getValue().trim();
 		String lastName = txtlastname.getValue().trim();
 		String email = txtemail.getValue().trim();
 		String phone = txtphone.getValue().trim();
 
-		if (id.isEmpty() || firstName.isEmpty() || lastName.isEmpty()
+		if (txtid.getValue().trim().isEmpty() || firstName.isEmpty() || lastName.isEmpty()
 				|| email.isEmpty() || phone.isEmpty()) {
 			Notification.show("Input data cannot be empty");
 			return;
@@ -132,7 +151,7 @@ public class UsersListUI extends HorizontalLayout{
 		for(User user : users) {
 			if(user.getId().equals(txtid.getValue().trim())) {
 
-				user.setId(id);
+				user.setId(txtid.getValue().trim());
 				user.setFirstName(firstName);
 				user.setLastName(lastName);
 				user.setEmail(email);
@@ -146,6 +165,7 @@ public class UsersListUI extends HorizontalLayout{
 		}
 
 		if(userUpdated) {
+			mainController.addNewUser(new UserDB(id, firstName, lastName, email, phone));
 			clearFormData();
 			Notification.show("User has been successfully updated");
 		} else {
@@ -156,13 +176,13 @@ public class UsersListUI extends HorizontalLayout{
 	}
 
 	private void save(){
-		String id = txtid.getValue().trim();
+		Integer id = Integer.parseInt(txtid.getValue().trim());
 		String firstName = txtfirstname.getValue().trim();
 		String lastName = txtlastname.getValue().trim();
 		String email = txtemail.getValue().trim();
 		String phone = txtphone.getValue().trim();
 
-		if (id.isEmpty() || firstName.isEmpty() || lastName.isEmpty()
+		if (txtid.getValue().trim().isEmpty() || firstName.isEmpty() || lastName.isEmpty()
 				|| email.isEmpty() || phone.isEmpty()) {
 			Notification.show("Input data cannot be empty");
 			return;
@@ -176,10 +196,10 @@ public class UsersListUI extends HorizontalLayout{
 		}
 
 		if (userFound == false) {
-			users.add(new User(id, firstName, lastName, phone, email));
+			users.add(new User(txtid.getValue().trim(), firstName, lastName, phone, email));
 
 			listBox.setItems(users);
-			mainController.addNewUser(new UserDB(firstName, lastName, email, phone));
+			mainController.addNewUser(new UserDB(id, firstName, lastName, email, phone));
 		}else{
 			Notification.show("Cannot save. Same name exists. Try different name.");
 		}

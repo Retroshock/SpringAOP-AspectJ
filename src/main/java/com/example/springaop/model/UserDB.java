@@ -5,6 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.sun.istack.Nullable;
+
 @Entity
 public class UserDB {
 	@Id
@@ -24,7 +26,15 @@ public class UserDB {
 		this.phone = phone;
 		this.email = email;
 	}
-
+	
+	public UserDB(Integer id, String firstName, String lastName, String email, String phone) {
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.phone = phone;
+		this.email = email;
+	}
+	
 	public Integer getId() {
 		return id;
 	}
