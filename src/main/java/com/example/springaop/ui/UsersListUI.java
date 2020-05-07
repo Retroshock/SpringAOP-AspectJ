@@ -68,7 +68,10 @@ public class UsersListUI extends HorizontalLayout{
 	        query -> 30
         );
 		
-		listBox.setDataProvider(dataProvider);
+		
+		listBox.addAttachListener(listener -> {
+			listBox.setDataProvider(dataProvider);
+		});
 		
 		listBox.setItems(users);
 		listBox.setRenderer(new ComponentRenderer<>(user -> {
