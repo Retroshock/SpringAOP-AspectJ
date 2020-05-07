@@ -3,6 +3,7 @@ package com.example.springaop.controller;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,12 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.springaop.aspect.Loggable;
 import com.example.springaop.model.Maintenance;
 import com.example.springaop.model.UserDB;
 import com.example.springaop.repository.MaintenanceRepository;
 import com.example.springaop.repository.UserRepository;
 
 @Controller 
+@Component
 @RequestMapping(path="/demo") 
 public class MainController {
 	@Autowired 
@@ -32,6 +35,7 @@ public class MainController {
 	}
 
 	@GetMapping(path="/all")
+	@Loggable
 	public @ResponseBody Iterable<UserDB> getAllUsers() {
 		Iterable<UserDB> users = userRepository.findAll();
 		

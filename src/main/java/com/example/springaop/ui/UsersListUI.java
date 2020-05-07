@@ -24,7 +24,7 @@ import com.vaadin.flow.router.Route;
 import antlr.collections.List;
 
 
-@Route("statusica")
+@Route(value="statusica")
 public class UsersListUI extends HorizontalLayout{
 	
 	private TextField txtid, txtfirstname, txtlastname, txtphone,txtemail;

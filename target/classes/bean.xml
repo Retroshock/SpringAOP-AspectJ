@@ -11,6 +11,9 @@
 		
 	<bean name="userLoggableService"
 		class="com.example.springaop.service.UserLoggableService" />
+		
+	<bean name="MainController"
+		class="com.example.springaop.controller.MainController" />
 
 	<!-- Bean for Aspect -->
 	<bean name="userAspect"
