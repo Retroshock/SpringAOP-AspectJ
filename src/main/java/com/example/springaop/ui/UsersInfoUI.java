@@ -20,11 +20,11 @@ import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 
-@Route("status")
-public class UsersListUI extends HorizontalLayout{
+@Route("info")
+public class UsersInfoUI extends HorizontalLayout{
 
-	private TextField txtfirstname, txtlastname, txtphone,txtemail;
-	private Button btnAddNew, btnUpdate;
+	private TextField txtid, txtfirstname, txtlastname, txtphone,txtemail;
+	private Button btnUpdate;
 	private ListBox<UserDB> listBox = new ListBox<>();
 
 	private ArrayList<UserDB> users = new ArrayList<UserDB>();
@@ -33,7 +33,7 @@ public class UsersListUI extends HorizontalLayout{
 	public MainController mainController;
 
 	@Autowired
-	public UsersListUI(){
+	public UsersInfoUI(){
 		setupUsersList();
 
 		add(listBox, createForm());
@@ -52,35 +52,15 @@ public class UsersListUI extends HorizontalLayout{
 			Label phone = new Label("Phone: " + user.getPhone());
 			Label email = new Label("Email: " + user.getEmail());
 
-			Button delete = new Button(VaadinIcon.TRASH.create());
-			delete.addClickListener(event -> {
-				clearFormData();
-				mainController.deleteUser(user);
-			});
-			
-			Button info = new Button(VaadinIcon.INFO_CIRCLE.create());
-			info.addClickListener(listener -> {
-				info.getUI().ifPresent( ui -> ui.navigate("info"));
-			});
 
 			Div labels = new Div(id, name, phone, email);
-			Div buttons = new Div(delete, info);
-			Div layout = new Div(labels, buttons);
-			
+
+			Div layout = new Div(labels);
 			labels.getStyle().set("display", "flex")
 			.set("flexDirection", "column")
 			.set("marginRight", "10px");
 			layout.getStyle().set("display", "flex")
 			.set("alignItems", "center");
-			
-			buttons.getStyle().set("display", "flex")
-			.set("flexDirection", "column")
-			.set("marginRight", "10px");
-			buttons.getStyle().set("display", "flex")
-			.set("alignItems", "center");
-			
-			delete.getStyle().set("marginRight", "10px");
-			
 			return layout;
 		}));
 
@@ -98,21 +78,20 @@ public class UsersListUI extends HorizontalLayout{
 	private FormLayout createForm(){
 		FormLayout f = new FormLayout();
 
+		txtid = new TextField("ID");
 		txtfirstname = new TextField("First Name");
 		txtlastname = new TextField("Last Name");
 		txtphone = new TextField("Phone");
 		txtemail = new TextField("Email");
 
-		btnAddNew = new Button("Add New",
-				VaadinIcon.PLUS.create());
-		btnAddNew.addClickListener(event->save());
-
-		btnUpdate = new Button("Update UserDB",
+		txtid.setEnabled(false);
+	
+		btnUpdate = new Button("Update user",
 				VaadinIcon.ARROW_CIRCLE_UP.create());
 		btnUpdate.addClickListener(event->updateUser());
 		btnUpdate.setVisible(false);
 
-		f.add(txtfirstname,txtlastname,txtemail,txtphone, btnAddNew, btnUpdate);
+		f.add(txtid, txtfirstname,txtlastname,txtemail,txtphone, btnUpdate);
 		return f;
 	}
 
@@ -178,6 +157,7 @@ public class UsersListUI extends HorizontalLayout{
 	}
 
 	public void clearFormData(){
+		txtid.setValue("");
 		txtfirstname.setValue("");
 		txtlastname.setValue("");
 		txtphone.setValue("");
@@ -185,6 +165,7 @@ public class UsersListUI extends HorizontalLayout{
 	}
 
 	public void populateForm(UserDB user){
+		txtid.setValue(user.getId().toString());
 		txtfirstname.setValue(user.getFirstName());
 		txtlastname.setValue(user.getLastName());
 		txtemail.setValue(user.getEmail());

@@ -8,36 +8,36 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import com.example.springaop.aspect.Loggable;
-import com.example.springaop.model.User;
+import com.example.springaop.model.UserDB;
 
 @Component
 public class UserLoggableService {
 
-	private static Map<String, User> store = new HashMap<String, User>();
+	private static Map<String, UserDB> store = new HashMap<String, UserDB>();
 	static {
-		store.put("1", new User("1", "Jack", "Smith"));
-		store.put("2", new User("2", "Adam", "Johnson"));
+		store.put("1", new UserDB(1, "Jack", "Smith", "", ""));
+		store.put("2", new UserDB(2, "Adam", "Johnson", "", ""));
 	}
 
 	@Loggable
-	public User getCustomerById(String id) {
+	public UserDB getCustomerById(String id) {
 		return store.get(id);
 	}
 
-	public User setCustomerFirstName(String firstName, String id) {
-		User cust = store.get(id);
+	public UserDB setCustomerFirstName(String firstName, String id) {
+		UserDB cust = store.get(id);
 		cust.setFirstName(firstName);
 		return cust;
 	}
 
-	public User setCustomerLastName(String lastName, String id) {
-		User cust = store.get(id);
+	public UserDB setCustomerLastName(String lastName, String id) {
+		UserDB cust = store.get(id);
 		cust.setLastName(lastName);
 		return cust;
 	}
 
-	public List<User> findCustomerByLastName(String lastName) {
-		List<User> listCust = new ArrayList<>();
+	public List<UserDB> findCustomerByLastName(String lastName) {
+		List<UserDB> listCust = new ArrayList<>();
 
 		for (String id : store.keySet()) {
 			if (store.get(id).getLastName().equals(lastName)) {
@@ -48,8 +48,8 @@ public class UserLoggableService {
 		return listCust;
 	}
 
-	public List<User> findAllCustomers() {
-		List<User> listCust = new ArrayList<>();
+	public List<UserDB> findAllCustomers() {
+		List<UserDB> listCust = new ArrayList<>();
 
 		for (String id : store.keySet()) {
 			listCust.add(store.get(id));

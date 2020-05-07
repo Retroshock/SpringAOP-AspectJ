@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.springaop.model.UserDB;
 import com.example.springaop.repository.UserRepository;
 
-@Controller 
+@Controller
 @RequestMapping(path="/demo") 
 public class MainController {
 	@Autowired 
@@ -26,6 +26,11 @@ public class MainController {
 		return userRepository.save(user);
 	}
 
+	@PostMapping(path="/delete") 
+	public void deleteUser (@RequestBody UserDB user) {
+		userRepository.delete(user);
+	}
+	
 	@GetMapping(path="/all")
 	public @ResponseBody Iterable<UserDB> getAllUsers() {
 		Iterable<UserDB> users = userRepository.findAll();
