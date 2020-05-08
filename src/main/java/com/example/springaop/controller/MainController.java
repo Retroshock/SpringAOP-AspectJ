@@ -48,7 +48,6 @@ public class MainController {
 	}
 	
 	@GetMapping(path="/all")
-	@Loggable
 	public @ResponseBody Iterable<UserDB> getAllUsers() {
 		Iterable<UserDB> users = userRepository.findAll();
 		
@@ -76,7 +75,8 @@ public class MainController {
 		
 	}
 	
-	public Dues addDue (@RequestBody Dues due) {
+	@GetMapping(path="/allDues")
+	public Dues addDue(Dues due) {
 		return duesRepository.save(due);
 	}
 	

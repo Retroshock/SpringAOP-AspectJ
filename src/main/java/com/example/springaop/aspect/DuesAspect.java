@@ -19,12 +19,12 @@ public class DuesAspect {
 	@Autowired
 	MainController mainController;
 	
-	@Before("execution(* com.example.springaop.controller.MainController.getAllDuesOfUser(..))")
+	@Before("execution(* com.example.springaop.controller.MainController.foo(..))")
 	public void getDuesForId(JoinPoint joinPoint) {
 		System.out.println("All dues have been requested");
 	}
 
-	@Before("execution(* com.example.springaop.controller.MainController.addDue(..))")
+	@Before("execution(* com.example.springaop.controller.MainController.foo(..))")
 	public void setDues(JoinPoint joinPoint) {
 		Dues[] foo = (Dues[]) joinPoint.getArgs();
 		if (foo.length > 0) { 

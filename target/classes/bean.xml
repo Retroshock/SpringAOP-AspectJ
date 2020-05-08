@@ -14,7 +14,7 @@
 		
 	<bean name="MainController"
 		class="com.example.springaop.controller.MainController" />
-
+		
 	<!-- Bean for Aspect -->
 	<bean name="userAspect"
 		class="com.example.springaop.aspect.UserAspect" />

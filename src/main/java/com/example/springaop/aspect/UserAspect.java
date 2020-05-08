@@ -3,6 +3,7 @@ package com.example.springaop.aspect;
 import java.util.Date;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,15 @@ public class UserAspect {
 	
 	@Before("execution(* com.example.springaop.controller.MainController.getAllUsers(..))")
 	public void get(JoinPoint joinPoint) {
-		System.out.println("Execute advice on getAllUsers" + joinPoint.getSignature().getName());
+		Integer id = 1;
+		mainController.addLog(new Logs("Opened all users", new Date(), id));
+		System.out.println("Added log for " + joinPoint.getArgs().toString());
+	}
+	
+	@Before("execution(* com.example.springaop.controller.MainController.getAllMaintenance(..))")
+	public void getFoo(JoinPoint joinPoint) {
+		mainController.addLog(new Logs("Works on foo", new Date(), 2));
+		System.out.println("Added log for " + joinPoint.getArgs().toString());
 	}
 
 	@Before("execution(* com.example.springaop.service.UserService.set*(..))")
@@ -29,16 +38,17 @@ public class UserAspect {
 		System.out.println("Excute advice on Service set Method: " + joinPoint.getSignature().getName());
 	}
 	
-	@Before("execution(* com.example.springaop.controller.MainController.addDue(..))")
+	@AfterReturning("execution(* com.example.springaop.controller.MainController.addDue(..))")
 	public void setDues(JoinPoint joinPoint) {
-		Dues[] foo = (Dues[]) joinPoint.getArgs();
-		if (foo.length > 0) { 
-			Integer id = foo[0].getUserId();
-			mainController.addLog(new Logs("Added due", new Date(), id));
-			System.out.println("Added log for " + joinPoint.getArgs().toString());
+		if (joinPoint.getArgs() instanceof Dues[]) {
+			Dues[] foo = (Dues[]) joinPoint.getArgs();
+			if (foo.length > 0) { 
+				Integer id = foo[0].getUserId();
+				mainController.addLog(new Logs("Added due", new Date(), id));
+				System.out.println("Added log for " + joinPoint.getArgs().toString());
+			}
+			
 		}
-		
-		
 		System.out.println("Excute advice on Service add Method: " + joinPoint.getSignature().getName());
 	}
 }
