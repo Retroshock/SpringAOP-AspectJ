@@ -71,6 +71,11 @@ public class MainController {
 		return maintenance;
 	}
 	
+	@PostMapping(path="/addMaintenance") 
+	public Maintenance addNewMaintenance (@RequestBody Maintenance maintenance) {
+		return maintenanceRepository.save(maintenance);
+	}
+	
 	@Autowired
 	public MainController() {
 		

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.springaop.controller.MainController;
+import com.example.springaop.model.Maintenance;
 import com.example.springaop.model.UserDB;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -23,11 +24,13 @@ import com.vaadin.flow.router.Route;
 @Route("info")
 public class UsersInfoUI extends HorizontalLayout {
 
-	private TextField txtid, txtfirstname, txtlastname, txtphone, txtemail;
+	private TextField txtid, txtsum, txtmonth, txtyear;
 	private Button btnUpdate;
 	private ListBox<UserDB> listBox = new ListBox<>();
 
 	private ArrayList<UserDB> users = new ArrayList<UserDB>();
+
+	private Maintenance selectedMaintenance;
 
 	@Autowired
 	public MainController mainController;
@@ -65,7 +68,7 @@ public class UsersInfoUI extends HorizontalLayout {
 		});
 
 		listBox.addValueChangeListener(event -> {
-			populateForm(listBox.getValue());
+			populateForm(listBox.getValue(), mainController.getAllMaintenance());
 
 			btnUpdate.setVisible(true);
 		});
@@ -74,95 +77,70 @@ public class UsersInfoUI extends HorizontalLayout {
 	private FormLayout createForm() {
 		FormLayout f = new FormLayout();
 
-		txtid = new TextField("ID");
-		txtfirstname = new TextField("First Name");
-		txtlastname = new TextField("Last Name");
-		txtphone = new TextField("Phone");
-		txtemail = new TextField("Email");
+		txtid = new TextField("User ID");
+		txtsum = new TextField("Sum");
+		txtmonth = new TextField("Month");
+		txtyear = new TextField("Year");
 
 		txtid.setEnabled(false);
 
-		btnUpdate = new Button("Update user", VaadinIcon.ARROW_CIRCLE_UP.create());
-		btnUpdate.addClickListener(event -> updateUser());
+		btnUpdate = new Button("Update maintenance", VaadinIcon.ARROW_CIRCLE_UP.create());
+		btnUpdate.addClickListener(event -> updateMaintenance());
 		btnUpdate.setVisible(false);
 
-		f.add(txtid, txtfirstname, txtlastname, txtemail, txtphone, btnUpdate);
+		f.add(txtid, txtsum, txtmonth, txtyear, btnUpdate);
 		return f;
 	}
 
-	private void updateUser() {
-		String firstName = txtfirstname.getValue().trim();
-		String lastName = txtlastname.getValue().trim();
-		String email = txtemail.getValue().trim();
-		String phone = txtphone.getValue().trim();
+	private void updateMaintenance() {
+		String id = txtid.getValue().trim();
+		String sum = txtsum.getValue().trim();
+		String month = txtmonth.getValue().trim();
+		String year = txtyear.getValue().trim();
 
-		if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || phone.isEmpty()) {
+		if (id.isEmpty() || sum.isEmpty() || month.isEmpty() || year.isEmpty()) {
 			Notification.show("Input data cannot be empty");
 			return;
 		}
 
-		UserDB userFound = null;
-
-		for (UserDB user : users) {
-			if (user.getEmail().equals(email)) {
-				userFound = user;
-				break;
-			}
-		}
 
 		btnUpdate.setVisible(false);
 
-		if (userFound != null) {
-			clearFormData();
-			mainController.addNewUser(userFound);
-			dataProvider.refreshItem(userFound);
-			Notification.show("User has been successfully updated");
-		} else {
-			Notification.show("User not found!");
-		}
-	}
-
-	private void save() {
-		String firstName = txtfirstname.getValue().trim();
-		String lastName = txtlastname.getValue().trim();
-		String email = txtemail.getValue().trim();
-		String phone = txtphone.getValue().trim();
-
-		if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || phone.isEmpty()) {
-			Notification.show("Input data cannot be empty");
-			return;
+		if (selectedMaintenance == null) {
+			selectedMaintenance = new Maintenance();
 		}
 
-		Boolean userFound = false;
-		for (UserDB user : users) {
-			if (user.getEmail().equals(email)) {
-				userFound = true;
-			}
-		}
+		selectedMaintenance.setUserId(Integer.parseInt(id));
+		selectedMaintenance.setSum(Double.parseDouble(sum));
+		selectedMaintenance.setMonth(Integer.parseInt(month));
+		selectedMaintenance.setYear(Integer.parseInt(year));
 
-		if (userFound == false) {
-			clearFormData();
-			mainController.addNewUser(new UserDB(firstName, lastName, email, phone));
-			dataProvider.refreshAll();
-		} else {
-			Notification.show("Cannot save. Same email exists. Try different email.");
-		}
+		mainController.addNewMaintenance(selectedMaintenance);
+		Notification.show("Maintenance has been successfully updated");
+		
+		clearFormData();
 	}
 
 	public void clearFormData() {
 		txtid.setValue("");
-		txtfirstname.setValue("");
-		txtlastname.setValue("");
-		txtphone.setValue("");
-		txtemail.setValue("");
+		txtsum.setValue("");
+		txtmonth.setValue("");
+		txtyear.setValue("");
 	}
 
-	public void populateForm(UserDB user) {
+	public void populateForm(UserDB user, Iterable<Maintenance> allMaintanances) {
+		clearFormData();
 		txtid.setValue(user.getId().toString());
-		txtfirstname.setValue(user.getFirstName());
-		txtlastname.setValue(user.getLastName());
-		txtemail.setValue(user.getEmail());
-		txtphone.setValue(user.getPhone());
+
+		allMaintanances.forEach(maintenance -> {
+			if(maintenance.getUserId() == user.getId()) {
+				txtsum.setValue(maintenance.getSum().toString());
+				txtmonth.setValue(maintenance.getMonth().toString());
+				txtyear.setValue(maintenance.getYear().toString());
+
+				selectedMaintenance = maintenance;
+			}
+		});
 	}
 
 	private DataProvider<UserDB, Void> dataProvider = DataProvider.fromCallbacks(
