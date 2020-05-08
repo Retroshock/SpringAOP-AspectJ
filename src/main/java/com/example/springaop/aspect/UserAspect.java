@@ -29,7 +29,7 @@ public class UserAspect {
 	
 	@Before("execution(* com.example.springaop.controller.MainController.getAllMaintenance(..))")
 	public void getFoo(JoinPoint joinPoint) {
-		mainController.addLog(new Logs("Works on foo", new Date(), 2));
+		mainController.addLog(new Logs("Got all maintenance", new Date(), 2));
 		System.out.println("Added log for " + joinPoint.getArgs().toString());
 	}
 
