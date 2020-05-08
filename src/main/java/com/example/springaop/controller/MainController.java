@@ -12,8 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.springaop.aspect.Loggable;
+import com.example.springaop.model.Dues;
+import com.example.springaop.model.Logs;
 import com.example.springaop.model.Maintenance;
 import com.example.springaop.model.UserDB;
+import com.example.springaop.repository.DuesRepository;
+import com.example.springaop.repository.LogsRepository;
 import com.example.springaop.repository.MaintenanceRepository;
 import com.example.springaop.repository.UserRepository;
 
@@ -26,6 +30,12 @@ public class MainController {
 	
 	@Autowired
 	private MaintenanceRepository maintenanceRepository;
+	
+	@Autowired 
+	private DuesRepository duesRepository;
+	
+	@Autowired 
+	private LogsRepository logsRepository;
 
 	@PostMapping(path="/add") 
 	public UserDB addNewUser (@RequestBody UserDB user) {
@@ -50,6 +60,8 @@ public class MainController {
 		
 		System.out.println("Users: " + usersArray.size());
 		
+		addDue(new Dues(1, 3));
+		
 		return users;
 	}
 	
@@ -63,4 +75,22 @@ public class MainController {
 	public MainController() {
 		
 	}
+	
+	public Dues addDue (@RequestBody Dues due) {
+		return duesRepository.save(due);
+	}
+	
+	public Iterable<Dues> getAllDuesOfUser(Integer id) {
+		Iterable<Dues> dues = duesRepository.findAllById(new ArrayList<Integer>(id));
+		return dues;
+	}
+	
+ 	public Iterable<Logs> getAllLogs() {
+		return logsRepository.findAll();
+ 	}
+ 	
+ 	public Logs addLog(Logs log) {
+ 		return logsRepository.save(log);
+ 	}
+	
 }

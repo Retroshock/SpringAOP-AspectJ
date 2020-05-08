@@ -14,21 +14,16 @@ import com.example.springaop.model.Logs;
 
 @Aspect
 @Component
-public class UserAspect {
+public class DuesAspect {
 	
 	@Autowired
 	MainController mainController;
 	
-	@Before("execution(* com.example.springaop.controller.MainController.getAllUsers(..))")
-	public void get(JoinPoint joinPoint) {
-		System.out.println("Execute advice on getAllUsers" + joinPoint.getSignature().getName());
+	@Before("execution(* com.example.springaop.controller.MainController.getAllDuesOfUser(..))")
+	public void getDuesForId(JoinPoint joinPoint) {
+		System.out.println("All dues have been requested");
 	}
 
-	@Before("execution(* com.example.springaop.service.UserService.set*(..))")
-	public void getAllSetAdvices(JoinPoint joinPoint) {
-		System.out.println("Excute advice on Service set Method: " + joinPoint.getSignature().getName());
-	}
-	
 	@Before("execution(* com.example.springaop.controller.MainController.addDue(..))")
 	public void setDues(JoinPoint joinPoint) {
 		Dues[] foo = (Dues[]) joinPoint.getArgs();

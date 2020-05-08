@@ -19,6 +19,9 @@
 	<bean name="userAspect"
 		class="com.example.springaop.aspect.UserAspect" />
 		
+	<bean name="duesAspect"
+		class="com.example.springaop.aspect.DuesAspect" />
+		
 	<bean name="test"
 		class="com.example.springaop.ui.UsersListUI" />
 
